@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = "SMathStringExpression"
-s.version      = "1.0.1"
+s.version      = "1.0.2"
 s.summary      = "MathStringExpression"
 s.description  = <<-DESC
 MathStringExpression
@@ -12,6 +12,6 @@ s.author             = { "quxingyi" => "quxingyi@outlook.com" }
 s.social_media_url   = "https://github.com/qddnovo/MathStringExpression"
 s.platform     = :ios, "9.0"
 s.source       = { :git => "https://github.com/sujiewen/MathStringExpression.git", :tag => "#{s.version}" }
-s.source_files  = "MathStringExpression", "MathStringExpression/**/*.{h,m}"
+s.source_files  = "MathStringExpression", "MathStringExpression/MathStringExpression/**/*.{h,m}"
 s.requires_arc = true
 end
