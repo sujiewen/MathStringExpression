@@ -39,6 +39,7 @@
 		45347F681F55503A00F1630C /* MSValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSValue.h; sourceTree = "<group>"; };
 		45347F691F55503A00F1630C /* MSValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSValue.m; sourceTree = "<group>"; };
 		453C5D4F1D4B2B3F00D7C605 /* MathStringExpression.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathStringExpression.h; sourceTree = "<group>"; };
+		6B677F8021CFABB400397309 /* SMathStringExpression.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = SMathStringExpression.podspec; sourceTree = "<group>"; };
 		9F331A1E1D425902009822C2 /* MathStringExpression.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathStringExpression.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F331A221D425902009822C2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9F331A241D425902009822C2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -99,6 +100,7 @@
 		9F331A151D425902009822C2 = {
 			isa = PBXGroup;
 			children = (
+				6B677F8021CFABB400397309 /* SMathStringExpression.podspec */,
 				9F331A201D425902009822C2 /* MathStringExpression */,
 				9F331A1F1D425902009822C2 /* Products */,
 			);
