@@ -2,7 +2,7 @@
 
 ![alt icon](https://raw.githubusercontent.com/qddnovo/MathStringExpression/master/MathStringExpression/cmp.jpg)
 
-##1.0.4 新版本特性
+## 1.0.4 新版本特性
 * 增加pod支持
 * 增加对函数的参数字符串支持,但是返回值还是Number
 
