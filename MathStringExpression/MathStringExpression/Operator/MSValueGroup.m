@@ -7,6 +7,8 @@
 //
 
 #import "MSValueGroup.h"
+#import "MSNumber.h"
+#import "MSString.h"
 
 @interface MSValueGroup ()
 @property (nonatomic,strong) NSMutableArray<MSValue*>* values;
@@ -58,9 +60,19 @@
     return self.values.count;
 }
 
-- (NSArray<NSValue *> *)toParameterizedValues
+- (NSArray<MSValue *> *)toParameterizedValues
 {
-    return self.values.copy;
+    NSMutableArray *tmpValues = [NSMutableArray new];
+    [self.values enumerateObjectsUsingBlock:^(MSValue * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass: [MSString class]]) {
+            MSString *strV = [MSString stringwithStringValue:[NSString stringWithFormat:@"'%@'",obj.stringValue]];
+            [tmpValues addObject:strV];
+        }
+        else {
+            [tmpValues addObject:obj];
+        }
+    }];
+    return tmpValues;
 }
 #pragma mark - 用户
 

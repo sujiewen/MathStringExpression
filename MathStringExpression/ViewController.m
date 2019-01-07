@@ -32,14 +32,42 @@
                                                                          @"argsCount":@(-1)}];
     [sum computeWithBlock:^NSNumber *(NSArray *args) {
         double result = 0.0;
-        for (NSNumber* num in args) {
-            result += num.doubleValue;
+        for (MSValue* value in args) {
+            if ([value isKindOfClass: [MSNumber class]]) {
+                result += ((MSNumber *)value).doubleValue;
+            }
+            else if([value isKindOfClass: [NSNumber class]]) {
+                result += ((NSNumber *)value).doubleValue;
+            }
+            else if([value isKindOfClass: [MSString class]]) {
+                result += [((MSString *)value).stringValue doubleValue];
+            }
         }
         return [NSDecimalNumber numberWithDouble:result];
     }];
     [tab setElement:sum];
     //..//..//..//..//..//..//..//..//..//..//..//..//..//..//..//..//..//..//
     //..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\
+    
+    MSFunctionOperator* scount = [MSFunctionOperator operatorWithKeyValue:@{@"name":@"scount",
+                                                                         @"level":@(1),
+                                                                         @"argsCount":@(-1)}];
+    [scount computeWithBlock:^NSNumber *(NSArray *args) {
+        double result = 0.0;
+        for (MSValue* value in args) {
+            if ([value isKindOfClass: [MSNumber class]]) {
+                result += ((MSNumber *)value).doubleValue;
+            }
+            else if([value isKindOfClass: [NSNumber class]]) {
+                result += ((NSNumber *)value).doubleValue;
+            }
+            else if([value isKindOfClass: [MSString class]]) {
+                result += [((MSString *)value).stringValue doubleValue];
+            }
+        }
+        return [NSDecimalNumber numberWithDouble:result];
+    }];
+    [tab setElement:scount];
     
     
     /** 
@@ -112,14 +140,15 @@
     MSConstant* opConstantJS = [MSConstant constantWithJSValue:@" var age = 18.00; " error:nil];
     [tab setElement:opConstantJS];
     
-    NSError* errorCountJSFun;
-    MSFunctionOperator* countFunJS = [MSFunctionOperator operatorWithJSFunction:@"function count(...args){ let ret = 0; for( let i = 0; i < args.length; i++ ){ret++;} return ret; }" error:&errorCountJSFun];
-    [tab setElement:countFunJS];
+//    NSError* errorCountJSFun;
+//    MSFunctionOperator* countFunJS = [MSFunctionOperator operatorWithJSFunction:@"function count(...args){ let ret = 0; for( let i = 0; i < args.length; i++ ){ret++;} return ret; }" error:&errorCountJSFun];
+//    [tab setElement:countFunJS];
     
     
     /** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** **  */
     //3√8 + 2^3 + age + And(1,1) + sin(180°) + max(1,2,3,4,5)+ And(4,6)+sum(1,2)
-    NSString* jsExpString = @"3√8 + 2^3 + age + And(1,1) + sin(180°) + max(1,2,3,4,5)+ And(4,6)+sum(1,2)+count('12','13','15')";//
+    //3√8 + 2^3 + age + And(1,1) + sin(180°) + max(1,2,3,4,5)+ And(4,6)+sum(1,2)+count('12','13','15')+
+    NSString* jsExpString = @"sum(12,13)+scount('22','333')";//
 //  jsExpString = @" 1 / 0 ";//测试报错
     /** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** **  */
     
@@ -130,7 +159,6 @@
     }];
     
     if(allRight){
-        
         //计算表达式
         NSDecimalNumber* computeResult = [MSParser parserComputeNumberExpression:jsExpString error:nil];
         NSDecimal decimal = computeResult.decimalValue;
@@ -138,9 +166,9 @@
         NSDecimalRound(&desDecimal, &decimal , 3, NSRoundPlain);
         NSLog(@"保留3位小数计算结果为：%@",[NSDecimalNumber decimalNumberWithDecimal:desDecimal]);
         
-//        //表达式转JS表达式
-//        NSString* jsExpression = [MSParser parserJSExpressionFromExpression:jsExpString error:nil];
-//        NSLog(@"转JS表达式结果为：%@",jsExpression);
+        //表达式转JS表达式
+        NSString* jsExpression = [MSParser parserJSExpressionFromExpression:jsExpString error:nil];
+        NSLog(@"转JS表达式结果为：%@",jsExpression);
     }
     
     /**

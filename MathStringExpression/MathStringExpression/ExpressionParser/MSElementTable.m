@@ -68,9 +68,13 @@
     __weak MSElementTable* weakSelf = self;
     
     //字符串类型
-    NSPredicate* checkChars = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",@"^'.+'$"];
+    NSPredicate* checkChars = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",@"^['\"].+['\"]$"];
     if([checkChars evaluateWithObject:string]){
-        [re addObject:[MSString stringwithStringValue:string]];
+        NSRange range;
+        range.location = 1;
+        range.length = string.length - 2;
+        NSString *tmpStr = [string substringWithRange:range];
+        [re addObject:[MSString stringwithStringValue:tmpStr]];
     }
     if(re.count) return re;
     

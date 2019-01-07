@@ -9,6 +9,7 @@
 #import "MSStack.h"
 #import "MSValue.h"
 #import "MSNumber.h"
+#import "MSString.h"
 #import "MSScaner.h"
 #import "MSParser.h"
 #import "MSOperator.h"
@@ -243,7 +244,13 @@
                         valueGroup = [valueGroup toParameterizedValues];
                     }else if ([valueGroup isKindOfClass:[NSString class]]){
                         valueGroup = @[valueGroup];
+                    }else if([valueGroup isKindOfClass:[MSNumber class]]){
+                        
+                        valueGroup = @[valueGroup];
+                    }else if([valueGroup isKindOfClass:[MSString class]]){
+                        valueGroup = @[valueGroup];
                     }
+                    
                     NSMutableString* aJSExp = [self toolJSExpByOperator:funcOp
                                                                    args:[valueGroup subarrayWithRange:NSMakeRange(0,funcOp.argsCount>-1?funcOp.argsCount:[valueGroup count])]
                                                                   error:error];
@@ -414,6 +421,10 @@
             
             [numStrs addObject:((MSNumber*)elmt).stringValue];
         }
+        else if([elmt isMemberOfClass:[MSString class]]){
+            
+            [numStrs addObject:((MSString*)elmt).stringValue];
+        }
         else if([elmt isKindOfClass:[MSNumberGroup class]]){
             NSArray<MSNumber*>* vals = ((MSNumberGroup*)elmt).toParameterizedValues;
             NSMutableArray* tNumStrs = [NSMutableArray new];
@@ -473,9 +484,9 @@
         [jsExpression appendString:operator.name];
         [jsExpression appendString:@"("];
         NSUInteger maxIdx = numStrs.count - 1;
-        [numStrs enumerateObjectsUsingBlock:^(NSString*  _Nonnull numStr, NSUInteger idx, BOOL * _Nonnull stop) {
+        [numStrs enumerateObjectsUsingBlock:^(NSString*  _Nonnull strValue, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            [jsExpression appendString:numStr];
+            [jsExpression appendString:strValue];
             if(idx!=maxIdx)
                [jsExpression appendString:@","];
         }];

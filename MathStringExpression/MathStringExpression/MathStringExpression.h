@@ -12,5 +12,7 @@
 #import "MSValueOperator.h"
 #import "MSFunctionOperator.h"
 #import "MSNumber.h"
+#import "MSString.h"
 #import "MSConstant.h"
 #import "MSExpressionHelper.h"
+
