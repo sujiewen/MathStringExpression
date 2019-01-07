@@ -411,19 +411,19 @@
     }
     
     NSMutableString* jsExpression = [NSMutableString new];
-    NSMutableArray* numStrs = [NSMutableArray new];
+    NSMutableArray* valueStrs = [NSMutableArray new];
     [args enumerateObjectsUsingBlock:^(id _Nonnull elmt, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if([elmt isKindOfClass:[MSConstant class]]){
             
-            [numStrs addObject:((MSConstant*)elmt).name];
+            [valueStrs addObject:((MSConstant*)elmt).name];
         }else if([elmt isMemberOfClass:[MSNumber class]]){
             
-            [numStrs addObject:((MSNumber*)elmt).stringValue];
+            [valueStrs addObject:((MSNumber*)elmt).stringValue];
         }
         else if([elmt isMemberOfClass:[MSString class]]){
             
-            [numStrs addObject:((MSString*)elmt).stringValue];
+            [valueStrs addObject:[NSString stringWithFormat:@"'%@'",((MSString*)elmt).stringValue]];
         }
         else if([elmt isKindOfClass:[MSNumberGroup class]]){
             NSArray<MSNumber*>* vals = ((MSNumberGroup*)elmt).toParameterizedValues;
@@ -431,17 +431,22 @@
             [vals enumerateObjectsUsingBlock:^(MSNumber* _Nonnull num, NSUInteger idx, BOOL * _Nonnull stop) {
                 [tNumStrs addObject:num.valueToString];
             }];
-            [numStrs addObjectsFromArray:tNumStrs];
+            [valueStrs addObjectsFromArray:tNumStrs];
         }else if ([elmt isKindOfClass:[MSValueGroup class]]){
             NSArray<MSValue*>* vals = ((MSValueGroup*)elmt).toParameterizedValues;
             NSMutableArray* valueStrs = [NSMutableArray new];
             [vals enumerateObjectsUsingBlock:^(MSValue* _Nonnull value, NSUInteger idx, BOOL * _Nonnull stop) {
-                [valueStrs addObject:value.valueToString];
+                if ([value isKindOfClass: [MSString class]]) {
+                    [valueStrs addObject:[NSString stringWithFormat:@"'%@'",value.valueToString]];
+                }
+                else {
+                    [valueStrs addObject:value.valueToString];
+                }
             }];
-            [numStrs addObjectsFromArray:valueStrs];
+            [valueStrs addObjectsFromArray:valueStrs];
         }else if([elmt isKindOfClass:[NSString class]]){
             
-            [numStrs addObject:elmt];
+            [valueStrs addObject:elmt];
         }
     }];
     
@@ -449,27 +454,27 @@
     NSString*(^blockCustomToExpression)(NSString* name,NSArray* args)=[operator valueForKey:@"blockCustomToExpression"];
     if(blockCustomToExpression){
         
-        [jsExpression appendString:[NSString stringWithFormat:@"(%@)",blockCustomToExpression(operator.name,numStrs)]];
+        [jsExpression appendString:[NSString stringWithFormat:@"(%@)",blockCustomToExpression(operator.name,valueStrs)]];
         return jsExpression;
     }
     
     if([operator isKindOfClass:[MSValueOperator class]]){
         
-        if(numStrs.count == 1){
+        if(valueStrs.count == 1){
 
             if(((MSValueOperator*)operator).direction == EnumOperatorDirectionLeftToRight){
                 
                 [jsExpression appendString:[NSString stringWithFormat:@"(%@%@)",
-                                            numStrs[0],operator.name]];
+                                            valueStrs[0],operator.name]];
             }else{
                 
                 [jsExpression appendString:[NSString stringWithFormat:@"(%@%@)",
-                                            operator.name,numStrs[0]]];
+                                            operator.name,valueStrs[0]]];
             }
-        }else if(numStrs.count == 2){
+        }else if(valueStrs.count == 2){
             
             [jsExpression appendString:[NSString stringWithFormat:@"(%@%@%@)",
-                                        numStrs[0],operator.name,numStrs[1]]];
+                                        valueStrs[0],operator.name,valueStrs[1]]];
         }else{
             
             if(error){
@@ -483,8 +488,8 @@
         
         [jsExpression appendString:operator.name];
         [jsExpression appendString:@"("];
-        NSUInteger maxIdx = numStrs.count - 1;
-        [numStrs enumerateObjectsUsingBlock:^(NSString*  _Nonnull strValue, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSUInteger maxIdx = valueStrs.count - 1;
+        [valueStrs enumerateObjectsUsingBlock:^(NSString*  _Nonnull strValue, NSUInteger idx, BOOL * _Nonnull stop) {
             
             [jsExpression appendString:strValue];
             if(idx!=maxIdx)

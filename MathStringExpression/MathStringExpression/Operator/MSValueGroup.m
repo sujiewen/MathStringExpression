@@ -62,17 +62,7 @@
 
 - (NSArray<MSValue *> *)toParameterizedValues
 {
-    NSMutableArray *tmpValues = [NSMutableArray new];
-    [self.values enumerateObjectsUsingBlock:^(MSValue * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass: [MSString class]]) {
-            MSString *strV = [MSString stringwithStringValue:[NSString stringWithFormat:@"'%@'",obj.stringValue]];
-            [tmpValues addObject:strV];
-        }
-        else {
-            [tmpValues addObject:obj];
-        }
-    }];
-    return tmpValues;
+    return  self.values.copy;
 }
 #pragma mark - 用户
 
