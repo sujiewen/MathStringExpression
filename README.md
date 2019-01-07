@@ -2,6 +2,11 @@
 
 ![alt icon](https://raw.githubusercontent.com/qddnovo/MathStringExpression/master/MathStringExpression/cmp.jpg)
 
+##1.0.4 新版本特性
+* 增加pod支持
+* 增加对函数的参数字符串支持,但是返回值还是Number
+
+
 ## 简介
 * 为需要开发iOS计算器的开发者提供的一个便捷
 * 计算字符串数学表达式
