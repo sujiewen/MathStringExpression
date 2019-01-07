@@ -10,6 +10,8 @@
 		452337CB1D54937E00C67F7D /* MSExpressionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 452337CA1D54937E00C67F7D /* MSExpressionHelper.m */; };
 		45347F671F540E3F00F1630C /* MSNumberGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 45347F661F540E3F00F1630C /* MSNumberGroup.m */; };
 		45347F6A1F55503A00F1630C /* MSValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 45347F691F55503A00F1630C /* MSValue.m */; };
+		6B1DF61F21E07FB300125671 /* MSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1DF61D21E07FB200125671 /* MSString.m */; };
+		6B1DF62021E07FB300125671 /* MSValueGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1DF61E21E07FB300125671 /* MSValueGroup.m */; };
 		9F331A231D425902009822C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F331A221D425902009822C2 /* main.m */; };
 		9F331A261D425902009822C2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F331A251D425902009822C2 /* AppDelegate.m */; };
 		9F331A291D425902009822C2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F331A281D425902009822C2 /* ViewController.m */; };
@@ -39,6 +41,10 @@
 		45347F681F55503A00F1630C /* MSValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSValue.h; sourceTree = "<group>"; };
 		45347F691F55503A00F1630C /* MSValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSValue.m; sourceTree = "<group>"; };
 		453C5D4F1D4B2B3F00D7C605 /* MathStringExpression.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathStringExpression.h; sourceTree = "<group>"; };
+		6B1DF61B21E07FB200125671 /* MSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSString.h; sourceTree = "<group>"; };
+		6B1DF61C21E07FB200125671 /* MSValueGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSValueGroup.h; sourceTree = "<group>"; };
+		6B1DF61D21E07FB200125671 /* MSString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSString.m; sourceTree = "<group>"; };
+		6B1DF61E21E07FB300125671 /* MSValueGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSValueGroup.m; sourceTree = "<group>"; };
 		6B677F8021CFABB400397309 /* SMathStringExpression.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = SMathStringExpression.podspec; sourceTree = "<group>"; };
 		9F331A1E1D425902009822C2 /* MathStringExpression.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathStringExpression.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F331A221D425902009822C2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -189,6 +195,10 @@
 				45347F661F540E3F00F1630C /* MSNumberGroup.m */,
 				45347F681F55503A00F1630C /* MSValue.h */,
 				45347F691F55503A00F1630C /* MSValue.m */,
+				6B1DF61B21E07FB200125671 /* MSString.h */,
+				6B1DF61D21E07FB200125671 /* MSString.m */,
+				6B1DF61C21E07FB200125671 /* MSValueGroup.h */,
+				6B1DF61E21E07FB300125671 /* MSValueGroup.m */,
 			);
 			path = Operator;
 			sourceTree = "<group>";
@@ -275,12 +285,14 @@
 				9F331A5D1D42592B009822C2 /* MSPairOperator.m in Sources */,
 				9F331A5A1D42592B009822C2 /* MSFunctionOperator.m in Sources */,
 				9F331A561D42592B009822C2 /* MSScaner.m in Sources */,
+				6B1DF62021E07FB300125671 /* MSValueGroup.m in Sources */,
 				9F331A551D42592B009822C2 /* MSStack.m in Sources */,
 				9F331A5C1D42592B009822C2 /* MSOperator.m in Sources */,
 				9F331A5E1D42592B009822C2 /* MSValueOperator.m in Sources */,
 				9F331A231D425902009822C2 /* main.m in Sources */,
 				9F331A571D42592B009822C2 /* NSError+MSExpression.m in Sources */,
 				452337CB1D54937E00C67F7D /* MSExpressionHelper.m in Sources */,
+				6B1DF61F21E07FB300125671 /* MSString.m in Sources */,
 				45347F671F540E3F00F1630C /* MSNumberGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

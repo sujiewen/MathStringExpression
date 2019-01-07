@@ -14,6 +14,7 @@
 #import "MSOperator.h"
 #import "MSConstant.h"
 #import "MSNumberGroup.h"
+#import "MSValueGroup.h"
 #import "MSElementTable.h"
 #import "MSPairOperator.h"
 #import "MSValueOperator.h"
@@ -87,7 +88,7 @@
                         
                         NSArray* values = [tempStack pops:valueOp.argsCount].reverseObjectEnumerator.allObjects;
                         //合并参数并入栈
-                        [tempStack push: [MSNumberGroup groupCombineWithElementA:values[0] elementB:values[1]]];
+                        [tempStack push: [MSValueGroup groupCombineWithElementA:values[0] elementB:values[1]]];
                     }
                 }else{
                     //将需要的操作数出栈，并按参数计算顺序排列
@@ -104,7 +105,6 @@
                         
                         NSArray* values = [tempStack pops:valueOp.argsCount].reverseObjectEnumerator.allObjects;//出栈后反序为阅读顺序
                         MSValue* computeResult = [valueOp computeArgs:values];//计算
-                        //[MSNumberGroup groupWithArray:values].toParameterizedValues
                         if(!computeResult){
                             if(error){
                                 *error = [NSError errorWithReason:EnumMSErrorComputeFaile
@@ -203,7 +203,7 @@
                     }else{
                         NSArray* values = [tempStack pops:valueOp.argsCount].reverseObjectEnumerator.allObjects;
                         //合并参数并入栈
-                        [tempStack push: [MSNumberGroup groupCombineWithElementA:values[0] elementB:values[1]]];
+                        [tempStack push: [MSValueGroup groupCombineWithElementA:values[0] elementB:values[1]]];
                     }
                 }else{
                     //将需要的操作数出栈，并按参数计算顺序排列
@@ -236,9 +236,10 @@
                     }
                     *stop = YES;
                 }else{
-                    
                     id valueGroup = [tempStack pop];//函数只计算数字组
-                    if([valueGroup isKindOfClass:[MSNumberGroup class]]){
+                    if([valueGroup isKindOfClass:[MSValueGroup class]]){
+                        valueGroup = [valueGroup toParameterizedValues];
+                    }else if([valueGroup isKindOfClass:[MSNumberGroup class]]){
                         valueGroup = [valueGroup toParameterizedValues];
                     }else if ([valueGroup isKindOfClass:[NSString class]]){
                         valueGroup = @[valueGroup];
@@ -412,14 +413,21 @@
         }else if([elmt isMemberOfClass:[MSNumber class]]){
             
             [numStrs addObject:((MSNumber*)elmt).stringValue];
-        }else if ([elmt isKindOfClass:[MSNumberGroup class]]){
-            
+        }
+        else if([elmt isKindOfClass:[MSNumberGroup class]]){
             NSArray<MSNumber*>* vals = ((MSNumberGroup*)elmt).toParameterizedValues;
-            NSMutableArray* numStrs = [NSMutableArray new];
+            NSMutableArray* tNumStrs = [NSMutableArray new];
             [vals enumerateObjectsUsingBlock:^(MSNumber* _Nonnull num, NSUInteger idx, BOOL * _Nonnull stop) {
-                [numStrs addObject:num.valueToString];
+                [tNumStrs addObject:num.valueToString];
             }];
-            [numStrs addObjectsFromArray:numStrs];
+            [numStrs addObjectsFromArray:tNumStrs];
+        }else if ([elmt isKindOfClass:[MSValueGroup class]]){
+            NSArray<MSValue*>* vals = ((MSValueGroup*)elmt).toParameterizedValues;
+            NSMutableArray* valueStrs = [NSMutableArray new];
+            [vals enumerateObjectsUsingBlock:^(MSValue* _Nonnull value, NSUInteger idx, BOOL * _Nonnull stop) {
+                [valueStrs addObject:value.valueToString];
+            }];
+            [numStrs addObjectsFromArray:valueStrs];
         }else if([elmt isKindOfClass:[NSString class]]){
             
             [numStrs addObject:elmt];

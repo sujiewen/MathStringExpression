@@ -23,7 +23,9 @@ typedef enum EnumCharType{
     /** 空白符 */
     EnumCharTypeWhiteSpace,
     /** 其他 */
-    EnumCharTypeOthers
+    EnumCharTypeOthers,
+    /** 字符串 */
+    EnumCharTypeChars
 }EnumCharType;
 
 @implementation MSScaner
@@ -201,9 +203,30 @@ typedef enum EnumCharType{
         [splitedArr addObject:curString];
         return splitedArr;
     }
+    
+    __block BOOL isStartStr = NO;
+    NSString *startSQuote = @"'";
+    __block NSString *endQuote = @"'";
+    NSString *startDQuote = @"\"";
+    
     [string enumerateSubstringsInRange:NSMakeRange(firstLen, string.length-1) options:NSStringEnumerationByComposedCharacterSequences usingBlock:^(NSString * _Nullable substring, NSRange substringRange, NSRange enclosingRange, BOOL * _Nonnull stop) {
         
-        if([checkNumber evaluateWithObject:substring]){
+        if (isStartStr || (!isStartStr && ([substring isEqualToString:startSQuote] || [substring isEqualToString:startDQuote]))) {
+            if (lastType == EnumCharTypeChars) {
+                [curString appendString:substring];
+                if ([substring isEqualToString:endQuote]) {
+                    isStartStr = NO;
+                }
+            }
+            else {
+                isStartStr = YES;
+                lastType = EnumCharTypeChars;
+                endQuote = substring;
+                [splitedArr addObject:[curString copy]];
+                [curString setString:substring];
+            }
+        }
+        else if([checkNumber evaluateWithObject:substring]){
             if(lastType == EnumCharTypeNumber){
                 [curString appendString:substring];
             }else{

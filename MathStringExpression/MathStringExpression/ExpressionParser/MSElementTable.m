@@ -13,6 +13,7 @@
 #import "MSConstant.h"
 #import "MSOperator.h"
 #import "MSNumber.h"
+#import "MSString.h"
 #import "NSError+MSExpression.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "MSNumberGroup.h"
@@ -65,6 +66,13 @@
 {
     NSMutableArray* re = [NSMutableArray new];
     __weak MSElementTable* weakSelf = self;
+    
+    //字符串类型
+    NSPredicate* checkChars = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",@"^'.+'$"];
+    if([checkChars evaluateWithObject:string]){
+        [re addObject:[MSString stringwithStringValue:string]];
+    }
+    if(re.count) return re;
     
     //数字类型
     NSPredicate* checkNumber = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",@"[0-9\\.]+"];

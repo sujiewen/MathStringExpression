@@ -82,19 +82,29 @@
             }
             NSString* argsStr =  [javaScript substringWithRange:[result rangeAtIndex:2]];//$2
             NSArray* args = [argsStr componentsSeparatedByString:@","];
+            NSUInteger tmpArgsCount = args.count;
+            if ((args.count == 1 && [args[0] isEqualToString:@"...args"])) {
+                tmpArgsCount = -1;
+            }
             
             JSContext* jsContext = [[MSElementTable defaultTable] valueForKey:@"jsContext"];
             javaScript = [javaScript substringWithRange:[result rangeAtIndex:0]];//$0
             [jsContext evaluateScript:javaScript];//在js环境中定义函数
             MSFunctionOperator* opFunc = [self operatorWithKeyValue:@{@"name":funcName,
                                                                       @"level":@(1),
-                                                                      @"argsCount":@(args.count)}];
+                                                                      @"argsCount":@(tmpArgsCount)}];
             [opFunc computeWithBlock:^id (NSArray *args) {
                 
                 if(!args.count)return nil;
                 NSMutableArray* newArgs = [NSMutableArray new];
-                [args enumerateObjectsUsingBlock:^(MSNumber*  _Nonnull num, NSUInteger idx, BOOL * _Nonnull stop) {
-                    [newArgs addObject:num.numberValue];
+                [args enumerateObjectsUsingBlock:^(MSNumber*  _Nonnull value, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([value isKindOfClass:[MSNumber class]]) {
+                        MSNumber *number = (MSNumber *)value;
+                        [newArgs addObject:number.numberValue];
+                    }
+                    else {
+                        [newArgs addObject:value.stringValue];
+                    }
                 }];
                 JSContext* _jsContext = [[MSElementTable defaultTable] valueForKey:@"jsContext"];
                 return [MSNumber numberWithNumberValue:[_jsContext[funcName] callWithArguments:newArgs].toNumber];
