@@ -69,6 +69,31 @@
     }];
     [tab setElement:scount];
     
+    MSFunctionOperator* avg = [MSFunctionOperator operatorWithKeyValue:@{@"name":@"avg",
+                                                                         @"level":@(1),
+                                                                         @"argsCount":@(-1)}];
+    [avg computeWithBlock:^NSNumber *(NSArray *args) {
+        double result = 0.0;
+        for (MSValue* value in args) {
+            if ([value isKindOfClass: [MSNumber class]]) {
+                result += ((MSNumber *)value).doubleValue;
+            }
+            else if([value isKindOfClass: [NSNumber class]]) {
+                result += ((NSNumber *)value).doubleValue;
+            }
+            else if([value isKindOfClass: [MSString class]]) {
+                result += [((MSString *)value).stringValue doubleValue];
+            }
+        }
+        
+        if ([args count] > 0) {
+            result = (result / [args count]);
+        }
+        
+        return [NSDecimalNumber numberWithDouble:result];
+    }];
+    [tab setElement:avg];
+    
     
     /** 
      *  例1 自定义运算符 
@@ -90,6 +115,95 @@
     _pow.jsTransferOperator = pow_js;
     //最后将新运算符设置到表中
     [tab setElement:_pow];
+    
+    
+    /**
+     *  例1 自定义运算符
+     */
+    //自定义次方算术运算符》，查表可知优先级比*号低，为2
+    MSValueOperator* _greaterLhan  = [MSValueOperator operatorWithKeyValue:@{@"name":@">",
+                                                                             @"level":@(2)}];
+    //如何计算
+    [_greaterLhan computeWithBlock:^NSNumber *(NSArray *args) {
+        if([args[0] doubleValue] >  [args[1] doubleValue]) {
+            return [NSDecimalNumber numberWithBool:YES];
+        }
+        else {
+            return [NSDecimalNumber numberWithBool:NO];
+        }
+    }];
+    [tab setElement:_greaterLhan];
+    
+    MSValueOperator* greaterLhanOrEqual = [MSValueOperator operatorWithKeyValue:@{@"name":@"≥",
+                                                                                  @"level":@(2)}];
+    //如何计算
+    [greaterLhanOrEqual computeWithBlock:^NSNumber *(NSArray *args) {
+        if([args[0] doubleValue] >=  [args[1] doubleValue]) {
+            return [NSDecimalNumber numberWithBool:YES];
+        }
+        else {
+            return [NSDecimalNumber numberWithBool:NO];
+        }
+    }];
+    [tab setElement:greaterLhanOrEqual];
+    
+    MSValueOperator* equal = [MSValueOperator operatorWithKeyValue:@{@"name":@"≈",
+                                                                     @"level":@(2)}];
+    //如何计算
+    [equal computeWithBlock:^NSNumber *(NSArray *args) {
+        if([args[0] doubleValue] ==  [args[1] doubleValue]) {
+            return [NSDecimalNumber numberWithBool:YES];
+        }
+        else {
+            return [NSDecimalNumber numberWithBool:NO];
+        }
+    }];
+    
+    [tab setElement:equal];
+    
+    MSValueOperator* notEqual = [MSValueOperator operatorWithKeyValue:@{@"name":@"≠",
+                                                                        @"level":@(2)}];
+    //如何计算
+    [notEqual computeWithBlock:^NSNumber *(NSArray *args) {
+        if([args[0] doubleValue] !=  [args[1] doubleValue]) {
+            return [NSDecimalNumber numberWithBool:YES];
+        }
+        else {
+            return [NSDecimalNumber numberWithBool:NO];
+        }
+    }];
+    
+    [tab setElement:notEqual];
+    
+    MSValueOperator* lessThan = [MSValueOperator operatorWithKeyValue:@{@"name":@"<",
+                                                                        @"level":@(2)}];
+    
+    //如何计算
+    [lessThan computeWithBlock:^NSNumber *(NSArray *args) {
+        if([args[0] doubleValue] <  [args[1] doubleValue]) {
+            return [NSDecimalNumber numberWithBool:YES];
+        }
+        else {
+            return [NSDecimalNumber numberWithBool:NO];
+        }
+    }];
+    
+    [tab setElement:lessThan];
+    
+    MSValueOperator* lessThanOrEqual = [MSValueOperator operatorWithKeyValue:@{@"name":@"≤",
+                                                                               @"level":@(2)}];
+    
+    //如何计算
+    [lessThanOrEqual computeWithBlock:^NSNumber *(NSArray *args) {
+        if([args[0] doubleValue] <=  [args[1] doubleValue]) {
+            return [NSDecimalNumber numberWithBool:YES];
+        }
+        else {
+            return [NSDecimalNumber numberWithBool:NO];
+        }
+    }];
+    
+    [tab setElement:lessThanOrEqual];
     
     /** 
      *  例2 自定义对象根号
@@ -140,15 +254,19 @@
     MSConstant* opConstantJS = [MSConstant constantWithJSValue:@" var age = 18.00; " error:nil];
     [tab setElement:opConstantJS];
     
-//    NSError* errorCountJSFun;
-//    MSFunctionOperator* countFunJS = [MSFunctionOperator operatorWithJSFunction:@"function count(...args){ let ret = 0; for( let i = 0; i < args.length; i++ ){ret++;} return ret; }" error:&errorCountJSFun];
-//    [tab setElement:countFunJS];
+    NSError* error2JSFun;
+    MSFunctionOperator* opIFFunJS = [MSFunctionOperator operatorWithJSFunction:@"function IF(a, b ,c){ if (a) {return b;} else {return c;}}" error:&error2JSFun];
+    [tab setElement:opIFFunJS];
+    
+    NSError* errorCountJSFun;
+    MSFunctionOperator* countFunJS = [MSFunctionOperator operatorWithJSFunction:@"function count(...args){ var ret = 0; for( let i = 0; i < args.length; i++ ){ret++;} return ret; }" error:&errorCountJSFun];
+    [tab setElement:countFunJS];
     
     
     /** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** **  */
     //3√8 + 2^3 + age + And(1,1) + sin(180°) + max(1,2,3,4,5)+ And(4,6)+sum(1,2)
     //3√8 + 2^3 + age + And(1,1) + sin(180°) + max(1,2,3,4,5)+ And(4,6)+sum(1,2)+count('12','13','15')+
-    NSString* jsExpString = @"sum(12,13)+scount('22','333')";//
+    NSString* jsExpString = @"-6";//@"66%+12%+sum(66%,12%)-IF(66%<12%,66%,12%)-avg(12%4,12%6)";// 66%+12%+sum(66%,12%)-IF(66%<12%,66%,12%)-avg(12%4,12%6)
 //  jsExpString = @" 1 / 0 ";//测试报错
     /** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** ** *** **  */
     

@@ -367,7 +367,7 @@
                                                                         @"direction":@(EnumOperatorDirectionRightToLeft)}];
     [self makeOperatorSystem:_positive];
     [_positive computeWithBlock:^id (NSArray *args) {
-        if(args.count!=1 || ![MSNumber typeIsKindToObjects:args]) return nil;
+        if(args.count!=1 || [MSNumber typeIsKindToObjects:args]) return nil;
         return [args.firstObject msNumber];
     }];
     [self setElement:_positive];
